@@ -1,6 +1,13 @@
+
 // 对axios进行二次封装
 
-axios.defaults.baseURL = "http://localhost:8888";  // 配置请求的基本路径
+// 之前配置的
+// axios.defaults.baseURL = "http://localhost:8888";  // 配置请求的基本路径
+// localhost和127.0.0.1之间也是有跨域的
+axios.defaults.baseURL = "http://127.0.0.1:8888";  // 配置请求的基本路径
+
+axios.defaults.withCredentials = true; //配置为true 后台的请求都会带上cookie
+
 // 数据以表单的形式扔给服务器
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -16,9 +23,10 @@ axios.defaults.transformRequest = function (data) {
 };
 
 // 配置请求拦截器(里面什么都没有配置)
-axios.interceptors.request.use(config => {
+/*axios.interceptors.request.use(config => {
     return config
-})
+})*/
+
 // 配置响应拦截器
 axios.interceptors.response.use(response=> {
     return response.data;
@@ -34,10 +42,13 @@ axios.interceptors.response.use(response=> {
                 break;
         }
     }
-
     //　直接创建出一个失败的promise
     return Promise.reject(reason);
 })
+
+axios.defaults.validateStatus = function (status) {
+    return /^(2|3)\d{2}$/.test(status);
+}
 
 
 
